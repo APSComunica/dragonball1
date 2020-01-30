@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -19,16 +20,23 @@ import javafx.util.Duration;
 public class App extends Application {
     final short SCENE_HEIGHT = 470;
     final short SCENE_WIDTH = 800;
-           
+    
+    //freezer
     short freePosY = (short)((SCENE_HEIGHT)/2);
     byte freeCurrentSpeed = 4;
     byte freeDirectionY = 0;
     byte freeDirectionX = 0;
     short freePosX = (short)(SCENE_WIDTH - SCENE_WIDTH);
     
+    //Glubin
+    short gluPosY = (short)((SCENE_HEIGHT)/2);
+    short gluPosX = (short)(SCENE_WIDTH - (SCENE_WIDTH/6)); 
     
-    
-    
+    //Bola
+    short ballCenterX = 0;
+    byte ballCurrentSpeedX = 3;
+    byte ballDirectionX = 0;
+ 
     
     
     @Override
@@ -50,7 +58,44 @@ public class App extends Application {
         imageView2.setY(freePosY);
         root.getChildren().add(imageView2);
         
-  
+        //free dorado
+        Image image3= new Image(getClass().getResourceAsStream("/imagenes/dorado.png"));
+        ImageView imageView3 = new ImageView(image3);
+        imageView3.setX(freePosX);
+        imageView3.setY(freePosY);
+        
+        //free patada
+        Image image4= new Image(getClass().getResourceAsStream("/imagenes/puñetazo.png"));
+        ImageView imageView4 = new ImageView(image4);
+        imageView3.setX(freePosX);
+        imageView3.setY(freePosY);
+        
+        //free bolas
+        Image image5= new Image(getClass().getResourceAsStream("/imagenes/lanzandobola.png"));
+        ImageView imageView5 = new ImageView(image5);
+        imageView3.setX(freePosX);
+        imageView3.setY(freePosY);
+        
+        
+                //enemigo
+        Image image6= new Image(getClass().getResourceAsStream("/imagenes/glubin.png"));
+        ImageView imageView6 = new ImageView(image6);
+        imageView6.setX(gluPosX);
+        imageView6.setY(gluPosY);
+        root.getChildren().add(imageView6);
+        
+        
+                //enemigo2
+        Image image7= new Image(getClass().getResourceAsStream("/imagenes/glubin2.png"));
+        ImageView imageView7 = new ImageView(image7);
+        imageView7.setX(freePosX);
+        imageView7.setY(freePosY);
+        
+        //Bola
+        Circle circleBall = new Circle();
+        circleBall.setRadius(7);  
+        circleBall.setFill(Color.WHITE);
+        root.getChildren().add(circleBall);
         
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
@@ -71,10 +116,23 @@ public class App extends Application {
                     break;  
                 
                     
-                    //CAMBIAR A DORADO
-                case T:
-                     image image3= new Image(getClass().getResourceAsStream("/imagenes/dorado.png"));
-                    break; 
+                 case T:
+                    imageView2.setImage(image3);
+                    break;   
+                    
+                case V:
+                    imageView2.setImage(image2);
+                    break;     
+                    
+                 case P:
+                     imageView2.setImage(image4);
+                    break;   
+                    
+                case B:
+                    imageView2.setImage(image5);
+                    ballDirectionX = 1;
+                    break;     
+ 
             }
         });
         
@@ -97,9 +155,14 @@ public class App extends Application {
                     freeDirectionX = 0;
                     break; 
                     
-                case T:
-                     ;
-                    break;    
+                case P:
+                     imageView2.setImage(image2);
+                    break;   
+                    
+                case B:
+                     imageView2.setImage(image2);
+                     ballDirectionX = 1;
+                    break;  
             }
         });
         
@@ -135,7 +198,17 @@ public class App extends Application {
                     freePosX = (short)(SCENE_WIDTH);
                 }
                 
-                
+             
+                // ANIMACIÓN DE LA BOLA
+                circleBall.setCenterX(ballCenterX);
+                ballCenterX += ballCurrentSpeedX * ballDirectionX;
+                if(ballCenterX >= SCENE_WIDTH) {
+                    ballDirectionX = 0;
+                    circleBall.setCenterX(freePosX);
+                    circleBall.setCenterY(freePosY);
+                    ballCenterX = 0;
+                    //la bola se cree que sigue fuera hay que actualizar la variable
+                }
         }));
         
          timeline.setCycleCount(Timeline.INDEFINITE);
