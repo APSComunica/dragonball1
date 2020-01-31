@@ -31,11 +31,14 @@ public class App extends Application {
     //Glubin
     short gluPosY = (short)((SCENE_HEIGHT)/2);
     short gluPosX = (short)(SCENE_WIDTH - (SCENE_WIDTH/6)); 
+    byte gluDirectionY = 1;
+    
     
     //Bola
-    short ballCenterX = 0;
+    short ballCenterX = freePosX;
     byte ballCurrentSpeedX = 3;
     byte ballDirectionX = 0;
+    short ballCenterY = freePosY;
  
     
     
@@ -75,7 +78,7 @@ public class App extends Application {
         ImageView imageView5 = new ImageView(image5);
         imageView3.setX(freePosX);
         imageView3.setY(freePosY);
-        
+
         
                 //enemigo
         Image image6= new Image(getClass().getResourceAsStream("/imagenes/glubin.png"));
@@ -91,11 +94,21 @@ public class App extends Application {
         imageView7.setX(freePosX);
         imageView7.setY(freePosY);
         
+                
+        
+        //free bolas dorado
+        Image image8= new Image(getClass().getResourceAsStream("/imagenes/lanzandoboladora.png"));
+        ImageView imageView8 = new ImageView(image8);
+        imageView8.setX(freePosX);
+        imageView8.setY(freePosY);
+        
+        
         //Bola
         Circle circleBall = new Circle();
         circleBall.setRadius(7);  
         circleBall.setFill(Color.WHITE);
         root.getChildren().add(circleBall);
+        
         
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
@@ -130,9 +143,21 @@ public class App extends Application {
                     
                 case B:
                     imageView2.setImage(image5);
+                    ballCenterY = (short) (freePosY + 35);
+                    ballCenterX = (short) (freePosX + 80);
+                    circleBall.setCenterY(ballCenterY);
+                    circleBall.setCenterX(ballCenterX);
                     ballDirectionX = 1;
                     break;     
  
+                case D:
+                    imageView2.setImage(image8);
+                    ballCenterY = (short) (freePosY + 35);
+                    ballCenterX = (short) (freePosX + 80);
+                    circleBall.setCenterY(ballCenterY);
+                    circleBall.setCenterX(ballCenterX);
+                    ballDirectionX = 1;
+                    break; 
             }
         });
         
@@ -160,9 +185,12 @@ public class App extends Application {
                     break;   
                     
                 case B:
-                     imageView2.setImage(image2);
-                     ballDirectionX = 1;
+                    imageView2.setImage(image2);
                     break;  
+                    
+                case D:
+                    imageView2.setImage(image3);   
+                    break;
             }
         });
         
@@ -202,13 +230,27 @@ public class App extends Application {
                 // ANIMACIÓN DE LA BOLA
                 circleBall.setCenterX(ballCenterX);
                 ballCenterX += ballCurrentSpeedX * ballDirectionX;
-                if(ballCenterX >= SCENE_WIDTH) {
+                if(ballCenterX >= SCENE_WIDTH + 10) {
                     ballDirectionX = 0;
-                    circleBall.setCenterX(freePosX);
-                    circleBall.setCenterY(freePosY);
-                    ballCenterX = 0;
+                    ballCenterX = -10;
+                    ballCenterY = freePosY;
                     //la bola se cree que sigue fuera hay que actualizar la variable
                 }
+                
+                
+                //Movimiento glubin
+                imageView6.setY(gluPosY);
+                gluPosY += freeCurrentSpeed * gluDirectionY;
+                if(gluPosY <= 0 || gluPosY >= SCENE_HEIGHT) {
+                    gluDirectionY = 0;
+                }
+                if(gluPosY <= 0) {
+                    gluDirectionY = 1;
+                } else if (gluPosY >= SCENE_HEIGHT) {
+                    gluDirectionY = -1;
+                }
+
+                
         }));
         
          timeline.setCycleCount(Timeline.INDEFINITE);
