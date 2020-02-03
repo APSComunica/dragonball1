@@ -4,13 +4,18 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -20,6 +25,7 @@ import javafx.util.Duration;
 public class App extends Application {
     final short SCENE_HEIGHT = 470;
     final short SCENE_WIDTH = 800;
+    final short TEXT_SIZE = 24;
     
     //freezer
     short freePosY = (short)((SCENE_HEIGHT)/2);
@@ -40,8 +46,29 @@ public class App extends Application {
     byte ballDirectionX = 0;
     short ballCenterY = freePosY;
  
+    //Bola2 enemigo
+    short ball2CenterX = 0;
+    byte ball2CurrentSpeedX = 3;
+    byte ball2DirectionX = 1;
+    short ball2CenterY = 0;
+    byte ball2CurrentSpeedY = 3;
+    byte ball2DirectionY = 1;
     
     
+    
+    // Cuadros de texto para las puntuaciones
+    Text textScore;
+    Text textHighScore;
+    // Puntuación actual
+    int score;
+    // Puntuación máxima
+    int highScore;
+    
+    
+   //CUADRADO FREE
+     short freeHeight = 100;
+     short freeWidth = 100;
+     
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
@@ -110,6 +137,24 @@ public class App extends Application {
         root.getChildren().add(circleBall);
         
         
+        //bola aleatoria
+        Circle circleBall2 = new Circle();
+        circleBall2.setCenterX(gluPosX);
+        circleBall2.setCenterY(gluPosY);
+        circleBall2.setRadius(7);  
+        circleBall2.setFill(Color.RED);
+        root.getChildren().add(circleBall2);
+
+        
+        
+        //rectangulo freezer colision
+        Rectangle rectangle = new Rectangle(freeHeight,freeWidth);
+        rectangle.setX(50);
+        rectangle.setX(50);  
+        rectangle.setFill(Color.YELLOW);
+        root.getChildren().add(rectangle);
+        
+        
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
             switch(keyEvent.getCode()) {
@@ -160,6 +205,60 @@ public class App extends Application {
                     break; 
             }
         });
+        
+        
+        
+        
+        
+        //Vidas
+        // Panel para mostrar textos (puntuaciones)
+        HBox paneTextScore = new HBox();
+        paneTextScore.setTranslateY(20);
+        paneTextScore.setMinWidth(SCENE_WIDTH);
+        paneTextScore.setAlignment(Pos.CENTER);
+        root.getChildren().add(paneTextScore);
+
+        // Texto de etiqueta para la puntuación
+        Text textTitleScore = new Text("Freezer: ");
+        textTitleScore.setFont(Font.font(TEXT_SIZE));
+        textTitleScore.setFill(Color.WHITE);
+        // Texto para la puntuación
+        textScore = new Text("3");
+        textScore.setFont(Font.font(TEXT_SIZE));
+        textScore.setFill(Color.WHITE);
+        // Texto de etiqueta para la puntuación máxima
+        Text textTitleMaxScore = new Text("          Glubin Enemigo: ");
+        textTitleMaxScore.setFont(Font.font(TEXT_SIZE));
+        textTitleMaxScore.setFill(Color.WHITE);
+        // Texto para la puntuación máxima
+        textHighScore = new Text("3");
+        textHighScore.setFont(Font.font(TEXT_SIZE));
+        textHighScore.setFill(Color.WHITE);
+
+        // Añadir los textos al panel reservado para ellos 
+        paneTextScore.setSpacing(10);
+        paneTextScore.getChildren().add(textTitleScore);
+        paneTextScore.getChildren().add(textScore);
+        paneTextScore.getChildren().add(textTitleMaxScore);
+        paneTextScore.getChildren().add(textHighScore);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
  
         // CONTROL DEL TECLADO
@@ -234,7 +333,6 @@ public class App extends Application {
                     ballDirectionX = 0;
                     ballCenterX = -10;
                     ballCenterY = freePosY;
-                    //la bola se cree que sigue fuera hay que actualizar la variable
                 }
                 
                 
@@ -246,10 +344,38 @@ public class App extends Application {
                 }
                 if(gluPosY <= 0) {
                     gluDirectionY = 1;
-                } else if (gluPosY >= SCENE_HEIGHT) {
+                } else if (gluPosY >= (SCENE_HEIGHT - 100)) {
                     gluDirectionY = -1;
                 }
 
+                // ANIMACIÓN DE LA BOLA2
+                    circleBall2.setCenterX(ball2CenterX);
+                    circleBall2.setCenterY(ball2CenterY);
+                    ball2CenterX += ball2CurrentSpeedX * ball2DirectionX;
+                    ball2CenterY += ball2CurrentSpeedY * ball2DirectionY;
+                    
+                    
+                    
+                // Control de rebote horizontal
+                if(ball2CenterX >= SCENE_WIDTH) {
+                    if(score > highScore) {
+                            highScore = score;
+                            textHighScore.setText(String.valueOf(highScore));
+                        }
+                        score = 3;
+                        textScore.setText(String.valueOf(score));
+                    ball2DirectionX = -1;
+                } else if(ball2CenterX <= 0){
+                    ball2DirectionX = 1;
+                }
+                // Control de rebote vertical
+                if(ball2CenterY >= SCENE_HEIGHT) {
+                    ball2DirectionY = -1;
+                } else if(ball2CenterY <= 0){
+                    ball2DirectionY = 1;
+                }
+              
+                
                 
         }));
         
