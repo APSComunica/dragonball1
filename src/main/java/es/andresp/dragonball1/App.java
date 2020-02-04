@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -66,7 +67,7 @@ public class App extends Application {
     
     
    //CUADRADO FREE
-     short freeHeight = 100;
+     short freeHeight = 4;
      short freeWidth = 100;
      
     @Override
@@ -147,13 +148,19 @@ public class App extends Application {
 
         
         
-        //rectangulo freezer colision
-        Rectangle rectangle = new Rectangle(freeHeight,freeWidth);
-        rectangle.setX(50);
-        rectangle.setX(50);  
-        rectangle.setFill(Color.YELLOW);
-        root.getChildren().add(rectangle);
+        //rectangulo ATRAS freezer colision
+        Rectangle rectangle1 = new Rectangle(freeHeight,freeWidth);
+        root.getChildren().add(rectangle1);
+        rectangle1.setFill(Color.YELLOW);
+        rectangle1.setX(freePosX);
+        rectangle1.setY(freePosY); 
         
+        //rectangulo ADELANTE freezer colision
+        Rectangle rectangle2 = new Rectangle(freeHeight,freeWidth);
+        root.getChildren().add(rectangle2);
+        rectangle2.setFill(Color.RED);
+        rectangle2.setX(freePosX + 90);
+        rectangle2.setY(freePosY); 
         
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
@@ -246,20 +253,7 @@ public class App extends Application {
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+         
  
         // CONTROL DEL TECLADO
         scene.setOnKeyReleased((final KeyEvent keyEvent) -> {
@@ -298,6 +292,10 @@ public class App extends Application {
             // 0.017 ~= 60 FPS
             new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
                 // ANIMACIÓN DE Free
+                rectangle1.setY(freePosY);
+                rectangle1.setX(freePosX); 
+                rectangle2.setX(freePosX + 90);
+                rectangle2.setY(freePosY);
                 imageView2.setY(freePosY);
                 imageView2.setX(freePosX);
                 freePosY += freeCurrentSpeed * freeDirectionY;
@@ -348,6 +346,10 @@ public class App extends Application {
                     gluDirectionY = -1;
                 }
 
+                
+                
+                
+                
                 // ANIMACIÓN DE LA BOLA2
                     circleBall2.setCenterX(ball2CenterX);
                     circleBall2.setCenterY(ball2CenterY);
@@ -358,8 +360,8 @@ public class App extends Application {
                     
                 // Control de rebote horizontal
                 if(ball2CenterX >= SCENE_WIDTH) {
-                    if(score > highScore) {
-                            highScore = score;
+                    if(score < 0) {
+                            score = 0;
                             textHighScore.setText(String.valueOf(highScore));
                         }
                         score = 3;
@@ -376,7 +378,30 @@ public class App extends Application {
                 }
               
                 
+                //colsion hay que poner 4 rectangulos
+                // DETECCIÓN DE COLISIÓN 1 DE BOLA Y FREE
+                    Shape shapeCollision = Shape.intersect(circleBall2, rectangle1);
+                    boolean colisionVacia = shapeCollision.getBoundsInLocal().isEmpty();
+                    if(colisionVacia == false && ball2DirectionX == 1) {
+                        ball2DirectionX = -1;
+                        score--;
+                        textScore.setText(String.valueOf(score));
+                    }   
+  
                 
+                    
+                // DETECCIÓN DE COLISIÓN 2 DE BOLA Y FREE
+                    Shape shapeCollision2 = Shape.intersect(circleBall2, rectangle2);
+                    boolean colisionVacia2 = shapeCollision.getBoundsInLocal().isEmpty();
+                    if(colisionVacia2 == false && ball2DirectionX == -1) {
+                        ball2DirectionX = 1;
+                        score--;
+                        textScore.setText(String.valueOf(score));
+                    }       
+                    
+                    
+                    
+                    
         }));
         
          timeline.setCycleCount(Timeline.INDEFINITE);
