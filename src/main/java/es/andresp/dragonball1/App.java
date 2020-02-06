@@ -43,7 +43,7 @@ public class App extends Application {
     
     //Bola
     short ballCenterX = freePosX;
-    byte ballCurrentSpeedX = 3;
+    byte ballCurrentSpeedX = 30;
     byte ballDirectionX = 0;
     short ballCenterY = freePosY;
  
@@ -60,15 +60,23 @@ public class App extends Application {
     // Cuadros de texto para las puntuaciones
     Text textScore;
     Text textHighScore;
+    Text textScore2;
     // Puntuación actual
     int score;
     // Puntuación máxima
     int highScore;
+    // Puntuación actual2
+    int score2;
     
-    
-   //CUADRADO FREE
+   //CUADRADOS FREE
      short freeHeight = 4;
      short freeWidth = 100;
+     short freeHeight2 = 90;
+     short freeWidth2 = 4;
+   
+     //Cuadrado enemigo
+     short gluHeight = 4;
+     short gluWidth = 100;
      
     @Override
     public void start(Stage stage) {
@@ -162,6 +170,31 @@ public class App extends Application {
         rectangle2.setX(freePosX + 90);
         rectangle2.setY(freePosY); 
         
+        
+        
+        //rectangulo ARRIBA freezer colision
+        Rectangle rectangle3 = new Rectangle(freeHeight2,freeWidth2);
+        root.getChildren().add(rectangle3);
+        rectangle3.setFill(Color.GREEN);
+        rectangle3.setX(freePosX);
+        rectangle3.setY(freePosY + 100); 
+        
+        //rectangulo ABAJO freezer colision
+        Rectangle rectangle4 = new Rectangle(freeHeight2,freeWidth2);
+        root.getChildren().add(rectangle4);
+        rectangle4.setFill(Color.BLUE);
+        rectangle4.setX(freePosX);
+        rectangle4.setY(freePosY); 
+        
+        //rectangulo GLUBIN colision
+        Rectangle rectangle5 = new Rectangle(gluHeight,gluWidth);
+        root.getChildren().add(rectangle5);
+        rectangle5.setFill(Color.RED);
+        rectangle5.setX(gluPosX);
+        rectangle5.setY(gluPosY);
+
+        
+        
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
             switch(keyEvent.getCode()) {
@@ -234,20 +267,20 @@ public class App extends Application {
         textScore.setFont(Font.font(TEXT_SIZE));
         textScore.setFill(Color.WHITE);
         // Texto de etiqueta para la puntuación máxima
-        Text textTitleMaxScore = new Text("          Glubin Enemigo: ");
-        textTitleMaxScore.setFont(Font.font(TEXT_SIZE));
-        textTitleMaxScore.setFill(Color.WHITE);
-        // Texto para la puntuación máxima
-        textHighScore = new Text("3");
-        textHighScore.setFont(Font.font(TEXT_SIZE));
-        textHighScore.setFill(Color.WHITE);
+        Text textTitleScore2 = new Text("Glubin: ");
+        textTitleScore2.setFont(Font.font(TEXT_SIZE));
+        textTitleScore2.setFill(Color.WHITE);
+        // Texto para la puntuación
+        textScore2 = new Text("3");
+        textScore2.setFont(Font.font(TEXT_SIZE));
+        textScore2.setFill(Color.WHITE);
 
         // Añadir los textos al panel reservado para ellos 
         paneTextScore.setSpacing(10);
         paneTextScore.getChildren().add(textTitleScore);
         paneTextScore.getChildren().add(textScore);
-        paneTextScore.getChildren().add(textTitleMaxScore);
-        paneTextScore.getChildren().add(textHighScore);
+        paneTextScore.getChildren().add(textTitleScore2);
+        paneTextScore.getChildren().add(textScore2);
         
         
         
@@ -296,6 +329,10 @@ public class App extends Application {
                 rectangle1.setX(freePosX); 
                 rectangle2.setX(freePosX + 90);
                 rectangle2.setY(freePosY);
+                rectangle3.setY(freePosY + 100);
+                rectangle3.setX(freePosX); 
+                rectangle4.setX(freePosX);
+                rectangle4.setY(freePosY);
                 imageView2.setY(freePosY);
                 imageView2.setX(freePosX);
                 freePosY += freeCurrentSpeed * freeDirectionY;
@@ -331,10 +368,14 @@ public class App extends Application {
                     ballDirectionX = 0;
                     ballCenterX = -10;
                     ballCenterY = freePosY;
+                    if (score2 < 0){
+                        score ++;
+                    }
                 }
                 
                 
                 //Movimiento glubin
+                rectangle5.setY(gluPosY);
                 imageView6.setY(gluPosY);
                 gluPosY += freeCurrentSpeed * gluDirectionY;
                 if(gluPosY <= 0 || gluPosY >= SCENE_HEIGHT) {
@@ -360,12 +401,6 @@ public class App extends Application {
                     
                 // Control de rebote horizontal
                 if(ball2CenterX >= SCENE_WIDTH) {
-                    if(score < 0) {
-                            score = 0;
-                            textHighScore.setText(String.valueOf(highScore));
-                        }
-                        score = 3;
-                        textScore.setText(String.valueOf(score));
                     ball2DirectionX = -1;
                 } else if(ball2CenterX <= 0){
                     ball2DirectionX = 1;
@@ -378,7 +413,6 @@ public class App extends Application {
                 }
               
                 
-                //colsion hay que poner 4 rectangulos
                 // DETECCIÓN DE COLISIÓN 1 DE BOLA Y FREE
                     Shape shapeCollision = Shape.intersect(circleBall2, rectangle1);
                     boolean colisionVacia = shapeCollision.getBoundsInLocal().isEmpty();
@@ -392,12 +426,50 @@ public class App extends Application {
                     
                 // DETECCIÓN DE COLISIÓN 2 DE BOLA Y FREE
                     Shape shapeCollision2 = Shape.intersect(circleBall2, rectangle2);
-                    boolean colisionVacia2 = shapeCollision.getBoundsInLocal().isEmpty();
+                    boolean colisionVacia2 = shapeCollision2.getBoundsInLocal().isEmpty();
                     if(colisionVacia2 == false && ball2DirectionX == -1) {
                         ball2DirectionX = 1;
                         score--;
                         textScore.setText(String.valueOf(score));
                     }       
+                    
+                 
+                    
+                    
+                // DETECCIÓN DE COLISIÓN 3 DE BOLA Y FREE
+                    Shape shapeCollision3 = Shape.intersect(circleBall2, rectangle3);
+                    boolean colisionVacia3 = shapeCollision3.getBoundsInLocal().isEmpty();
+                    if(colisionVacia3 == false && ball2DirectionY == -1) {
+                        ball2DirectionY = 1;
+                        score--;
+                        textScore.setText(String.valueOf(score));
+                    }   
+                    
+                    
+                    
+                    
+                // DETECCIÓN DE COLISIÓN 4 DE BOLA Y FREE
+                    Shape shapeCollision4 = Shape.intersect(circleBall2, rectangle4);
+                    boolean colisionVacia4 = shapeCollision4.getBoundsInLocal().isEmpty();
+                    if(colisionVacia4 == false && ball2DirectionY == 1) {
+                        ball2DirectionY = -1;
+                        score--;
+                        textScore.setText(String.valueOf(score));
+                    }    
+                    
+                    
+                    
+                    
+                    
+                 // DETECCIÓN DE COLISIÓN 1 DE BOLA Y GLUBIN
+                    Shape shapeCollision5 = Shape.intersect(circleBall, rectangle5);
+                    boolean colisionVacia5 = shapeCollision5.getBoundsInLocal().isEmpty();
+                    if(colisionVacia5 == false && ballDirectionX == 1) {
+                        ball2DirectionY = -1;
+                        highScore--;
+                        textScore2.setText(String.valueOf(score2));
+                    }    
+                    
                     
                     
                     
