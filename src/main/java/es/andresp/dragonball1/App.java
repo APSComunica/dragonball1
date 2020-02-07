@@ -62,11 +62,11 @@ public class App extends Application {
     Text textHighScore;
     Text textScore2;
     // Puntuación actual
-    int score;
+    int score = 3;
     // Puntuación máxima
     int highScore;
     // Puntuación actual2
-    int score2;
+    int score2 = 3;
     
    //CUADRADOS FREE
      short freeHeight = 4;
@@ -262,16 +262,19 @@ public class App extends Application {
         Text textTitleScore = new Text("Freezer: ");
         textTitleScore.setFont(Font.font(TEXT_SIZE));
         textTitleScore.setFill(Color.WHITE);
+       
         // Texto para la puntuación
-        textScore = new Text("3");
+        textScore = new Text(String.valueOf(score));
         textScore.setFont(Font.font(TEXT_SIZE));
         textScore.setFill(Color.WHITE);
+       
         // Texto de etiqueta para la puntuación máxima
         Text textTitleScore2 = new Text("Glubin: ");
         textTitleScore2.setFont(Font.font(TEXT_SIZE));
         textTitleScore2.setFill(Color.WHITE);
+       
         // Texto para la puntuación
-        textScore2 = new Text("3");
+        textScore2 = new Text(String.valueOf(score2));
         textScore2.setFont(Font.font(TEXT_SIZE));
         textScore2.setFill(Color.WHITE);
 
@@ -369,7 +372,7 @@ public class App extends Application {
                     ballCenterX = -10;
                     ballCenterY = freePosY;
                     if (score2 < 0){
-                        score ++;
+                        gluDirectionY = 0;
                     }
                 }
                 
@@ -466,10 +469,13 @@ public class App extends Application {
                     boolean colisionVacia5 = shapeCollision5.getBoundsInLocal().isEmpty();
                     if(colisionVacia5 == false && ballDirectionX == 1) {
                         ball2DirectionY = -1;
-                        highScore--;
+                        score2--;
                         textScore2.setText(String.valueOf(score2));
-                    }    
-                    
+                    } else if(colisionVacia5 == false && ballDirectionX == -1) {
+                        ball2DirectionY = 1;
+                        score2--;
+                        textScore2.setText(String.valueOf(score2));    
+                    }
                     
                     
                     
