@@ -6,11 +6,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -78,12 +81,18 @@ public class App extends Application {
      short gluHeight = 4;
      short gluWidth = 100;
      
+     
+     
+
+    
+    
     @Override
     public void start(Stage stage) {
         Pane root = new Pane();
         var scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
         stage.setScene(scene);
         stage.show();
+        
         
         Image image1 = new Image(getClass().getResourceAsStream("/imagenes/uno.png"));
         ImageView imageView1 = new ImageView(image1);
@@ -194,6 +203,26 @@ public class App extends Application {
         rectangle5.setY(gluPosY);
 
         
+        
+        
+        
+        // Terminar partida
+        HBox hbox = new HBox();
+        root.getChildren().add(hbox);
+        
+        
+        VBox vbox = new VBox();
+        hbox.getChildren().add(vbox);
+        vbox.setVisible(false);
+
+
+        Label label = new Label("Se acabó la partida");
+        vbox.getChildren().add(label);
+        
+
+
+
+
         
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
@@ -323,6 +352,7 @@ public class App extends Application {
             }
         });
         
+        
 
         Timeline timeline = new Timeline(
             // 0.017 ~= 60 FPS
@@ -363,7 +393,7 @@ public class App extends Application {
                     freePosX = (short)(SCENE_WIDTH);
                 }
                 
-             
+                
                 // ANIMACIÓN DE LA BOLA
                 circleBall.setCenterX(ballCenterX);
                 ballCenterX += ballCurrentSpeedX * ballDirectionX;
@@ -373,6 +403,7 @@ public class App extends Application {
                     ballCenterY = freePosY;
                     if (score2 < 0){
                         gluDirectionY = 0;
+                        vbox.setVisible(true);
                     }
                 }
                 
@@ -475,11 +506,9 @@ public class App extends Application {
                         ball2DirectionY = 1;
                         score2--;
                         textScore2.setText(String.valueOf(score2));    
-                    }
-                    
-                    
-                    
-                    
+                    }        
+ 
+        
         }));
         
          timeline.setCycleCount(Timeline.INDEFINITE);
