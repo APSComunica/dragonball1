@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,11 +64,11 @@ public class App extends Application {
     Text textHighScore;
     Text textScore2;
     // Puntuación actual
-    int score = 3;
+    int score = 5;
     // Puntuación máxima
     int highScore;
     // Puntuación actual2
-    int score2 = 3;
+    int score2 = 5;
     
    //CUADRADOS FREE
      short freeHeight = 4;
@@ -78,13 +77,15 @@ public class App extends Application {
      short freeWidth2 = 4;
    
      //Cuadrado enemigo
-     short gluHeight = 4;
+     short gluHeight = 20;
      short gluWidth = 100;
      
      
-     
+     //Jefe final
+     int esperarsegundos = 5;
 
-    
+    //variable entera n
+     Timeline timelinefinal;
     
     @Override
     public void start(Stage stage) {
@@ -198,7 +199,7 @@ public class App extends Application {
         //rectangulo GLUBIN colision
         Rectangle rectangle5 = new Rectangle(gluHeight,gluWidth);
         root.getChildren().add(rectangle5);
-        rectangle5.setFill(Color.RED);
+        rectangle5.setFill(Color.TRANSPARENT);
         rectangle5.setX(gluPosX);
         rectangle5.setY(gluPosY);
 
@@ -217,6 +218,7 @@ public class App extends Application {
 
 
         Label label = new Label("Se acabó la partida");
+        label.setFont(Font.font(TEXT_SIZE));
         vbox.getChildren().add(label);
         
 
@@ -243,7 +245,7 @@ public class App extends Application {
                     break;  
                 
                     
-                 case T:
+                case T:
                     imageView2.setImage(image3);
                     break;   
                     
@@ -252,7 +254,7 @@ public class App extends Application {
                     break;     
                     
                  case P:
-                     imageView2.setImage(image4);
+                    imageView2.setImage(image4);
                     break;   
                     
                 case B:
@@ -339,7 +341,7 @@ public class App extends Application {
                     break; 
                     
                 case P:
-                     imageView2.setImage(image2);
+                    imageView2.setImage(image2);
                     break;   
                     
                 case B:
@@ -401,10 +403,7 @@ public class App extends Application {
                     ballDirectionX = 0;
                     ballCenterX = -10;
                     ballCenterY = freePosY;
-                    if (score2 < 0){
-                        gluDirectionY = 0;
-                        vbox.setVisible(true);
-                    }
+                    //Hacer que pare todo
                 }
                 
                 
@@ -426,10 +425,10 @@ public class App extends Application {
                 
                 
                 // ANIMACIÓN DE LA BOLA2
-                    circleBall2.setCenterX(ball2CenterX);
-                    circleBall2.setCenterY(ball2CenterY);
-                    ball2CenterX += ball2CurrentSpeedX * ball2DirectionX;
-                    ball2CenterY += ball2CurrentSpeedY * ball2DirectionY;
+                circleBall2.setCenterX(ball2CenterX);
+                circleBall2.setCenterY(ball2CenterY);
+                ball2CenterX += ball2CurrentSpeedX * ball2DirectionX;
+                ball2CenterY += ball2CurrentSpeedY * ball2DirectionY;
                     
                     
                     
@@ -448,24 +447,24 @@ public class App extends Application {
               
                 
                 // DETECCIÓN DE COLISIÓN 1 DE BOLA Y FREE
-                    Shape shapeCollision = Shape.intersect(circleBall2, rectangle1);
-                    boolean colisionVacia = shapeCollision.getBoundsInLocal().isEmpty();
-                    if(colisionVacia == false && ball2DirectionX == 1) {
-                        ball2DirectionX = -1;
-                        score--;
-                        textScore.setText(String.valueOf(score));
-                    }   
+                Shape shapeCollision = Shape.intersect(circleBall2, rectangle1);
+                boolean colisionVacia = shapeCollision.getBoundsInLocal().isEmpty();
+                if(colisionVacia == false && ball2DirectionX == 1) {
+                    ball2DirectionX = -1;
+                    score--;
+                    textScore.setText(String.valueOf(score));
+                }   
   
                 
                     
                 // DETECCIÓN DE COLISIÓN 2 DE BOLA Y FREE
-                    Shape shapeCollision2 = Shape.intersect(circleBall2, rectangle2);
-                    boolean colisionVacia2 = shapeCollision2.getBoundsInLocal().isEmpty();
-                    if(colisionVacia2 == false && ball2DirectionX == -1) {
-                        ball2DirectionX = 1;
-                        score--;
-                        textScore.setText(String.valueOf(score));
-                    }       
+                Shape shapeCollision2 = Shape.intersect(circleBall2, rectangle2);
+                boolean colisionVacia2 = shapeCollision2.getBoundsInLocal().isEmpty();
+                if(colisionVacia2 == false && ball2DirectionX == -1) {
+                    ball2DirectionX = 1;
+                    score--;
+                    textScore.setText(String.valueOf(score));
+                }       
                     
                  
                     
@@ -499,20 +498,55 @@ public class App extends Application {
                     Shape shapeCollision5 = Shape.intersect(circleBall, rectangle5);
                     boolean colisionVacia5 = shapeCollision5.getBoundsInLocal().isEmpty();
                     if(colisionVacia5 == false && ballDirectionX == 1) {
-                        ball2DirectionY = -1;
-                        score2--;
-                        textScore2.setText(String.valueOf(score2));
-                    } else if(colisionVacia5 == false && ballDirectionX == -1) {
                         ball2DirectionY = 1;
                         score2--;
-                        textScore2.setText(String.valueOf(score2));    
-                    }        
+                        textScore2.setText(String.valueOf(score2));
+                    }       
  
+                    
+                    //Hacer que pare glubin, y la bola CUANDO GLUBIN TENGA DE 0 VIDAS
+                    if (score2 < 1){
+                        gluDirectionY = 0;
+                        ball2DirectionX = 0;
+                        ball2DirectionY = 0;
+                        vbox.setVisible(true);
+                    }    
+                        
+                    //Hacer que pare glubin, y la bola CUANDO FREE TENGA DE 0 VIDAS
+                    if (score < 1){
+                        gluDirectionY = 0;
+                        ball2DirectionX = 0;
+                        ball2DirectionY = 0;
+                        vbox.setVisible(true);
+                    }    
+                    
+                    
         
+                    //reiniciar partida con glubin nuevo
+                    if (score2 < 1){
+                        timelinefinal.play ();
+                    }
+                    
+                    
+                    
+                    
         }));
         
-         timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+        
+        
+        
+        timelinefinal = new Timeline(
+            // 0.017 ~= 60 FPS
+        new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
+            esperarsegundos--;
+            System.out.println(esperarsegundos);
+            timeline.stop();
+        }));
+        
+        timelinefinal.setCycleCount(esperarsegundos);
+        
         
         
     }
