@@ -82,10 +82,21 @@ public class App extends Application {
      
      
      //Jefe final
-     int esperarsegundos = 5;
+     int esperarsegundos2 = 6;
 
-    //variable entera n
+    //variable timeline fina
      Timeline timelinefinal;
+     
+    // Ronda final
+    int esperarsegundos = 5;
+    Text textScore4;
+    Text textHighScore4;
+    Timeline timelinefinal2;
+    
+    
+    //variable timeline fina
+     Timeline timeline;
+    
     
     @Override
     public void start(Stage stage) {
@@ -94,7 +105,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         
-        
+        //Primer escenario
         Image image1 = new Image(getClass().getResourceAsStream("/imagenes/uno.png"));
         ImageView imageView1 = new ImageView(image1);
         root.getChildren().add(imageView1);
@@ -147,6 +158,11 @@ public class App extends Application {
         ImageView imageView8 = new ImageView(image8);
         imageView8.setX(freePosX);
         imageView8.setY(freePosY);
+        
+        
+        //Ultimo escenario
+        Image image9 = new Image(getClass().getResourceAsStream("/imagenes/ultimo.png"));
+        ImageView imageView9 = new ImageView(image9);
         
         
         //Bola
@@ -356,7 +372,7 @@ public class App extends Application {
         
         
 
-        Timeline timeline = new Timeline(
+        timeline = new Timeline(
             // 0.017 ~= 60 FPS
             new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
                 // ANIMACIÓN DE Free
@@ -527,6 +543,9 @@ public class App extends Application {
                         timelinefinal.play ();
                     }
                     
+                    if (score < 1){
+                    timeline.stop();
+                    }
                     
                     
                     
@@ -537,19 +556,123 @@ public class App extends Application {
         
         
         
+        
+        //Esperar para jefe final    
+       // Panel para mostrar textos (Tiempo de espera)
+        HBox paneTextScore4 = new HBox();
+        paneTextScore4.setTranslateY(20);
+        paneTextScore4.setMinWidth(SCENE_WIDTH);
+        root.getChildren().add(paneTextScore4);
+
+        // Texto de etiqueta para la puntuación
+        Text textTitleScore4 = new Text("Ronda final: ");
+        textTitleScore4.setFont(Font.font(TEXT_SIZE));
+        textTitleScore4.setFill(Color.RED);
+        
+        textScore4 = new Text(String.valueOf(esperarsegundos));
+        textScore4.setFont(Font.font(TEXT_SIZE));
+        textScore4.setFill(Color.RED);
+        
+        // Añadir los textos al panel reservado para ellos 
+        paneTextScore4.getChildren().add(textTitleScore4);
+        paneTextScore4.getChildren().add(textScore4);
+
+
+        
         timelinefinal = new Timeline(
             // 0.017 ~= 60 FPS
         new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
-            esperarsegundos--;
-            System.out.println(esperarsegundos);
             timeline.stop();
+       
+        //Tiempo de espera ronda final    
+        // Texto para esperar
+        textScore4.setText(String.valueOf(esperarsegundos));
+        esperarsegundos --;
+        
+            //reiniciar partida con glubin nuevo
+            if (esperarsegundos < 1){
+                timelinefinal2.play ();
+            }
+        
         }));
         
-        timelinefinal.setCycleCount(esperarsegundos);
+        timelinefinal.setCycleCount(esperarsegundos2);
+        
+        
+      
+        timelinefinal2 = new Timeline(
+                // 0.017 ~= 60 FPS
+            new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
+                timeline.play();
+
+                //freezer
+         freePosY = (short)((SCENE_HEIGHT)/2);
+         freeCurrentSpeed = 4;
+         freeDirectionY = 0;
+         freeDirectionX = 0;
+         freePosX = (short)(SCENE_WIDTH - SCENE_WIDTH);
+
+        //Glubin
+         gluPosY = (short)((SCENE_HEIGHT)/2);
+         gluPosX = (short)(SCENE_WIDTH - (SCENE_WIDTH/6)); 
+         gluDirectionY = 1;
+
+
+        //Bola
+         ballCenterX = freePosX;
+         ballCurrentSpeedX = 30;
+         ballDirectionX = 0;
+         ballCenterY = freePosY;
+
+        //Bola2 enemigo
+         ball2CenterX = 0;
+         ball2CurrentSpeedX = 7;
+         ball2DirectionX = 1;
+         ball2CenterY = 0;
+         ball2CurrentSpeedY = 7;
+         ball2DirectionY = 1;
+
+        // Puntuación actual
+         score = 3;
+
+        // Puntuación actual2
+         score2 = 10;
+
+        //CUADRADOS FREE
+         freeHeight = 4;
+         freeWidth = 100;
+         freeHeight2 = 90;
+         freeWidth2 = 4;
+
+         //Cuadrado enemigo
+         gluHeight = 20;
+         gluWidth = 100;
+
+         textScore2.setText(String.valueOf(score2));
+         textScore.setText(String.valueOf(score));
+         imageView6.setImage(image7);
+         imageView1.setImage(image9);
+         circleBall2.setFill(Color.BLUE);
+         
+         
+         if (score2 < 1){
+        timelinefinal.stop();
+        }
+        
+        if (score < 1){
+        timelinefinal.stop();
+        }
+        
+            }));    
+        
+        timelinefinal2.setCycleCount(1);
         
         
         
     }
+    
+    
+    //iniciar una segunda pantalla con un public void
 
     public static void main(String[] args) {
         launch();
