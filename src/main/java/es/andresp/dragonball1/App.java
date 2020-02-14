@@ -29,6 +29,7 @@ public class App extends Application {
     final short SCENE_HEIGHT = 470;
     final short SCENE_WIDTH = 800;
     final short TEXT_SIZE = 24;
+    final short TEXT_SIZE2 = 50;
     
     //freezer
     short freePosY = (short)((SCENE_HEIGHT)/2);
@@ -49,6 +50,13 @@ public class App extends Application {
     byte ballDirectionX = 0;
     short ballCenterY = freePosY;
  
+    
+    //Bola3TRANSFORMADO
+    short ballCenter3X = freePosX;
+    byte ballCurrentSpeed3X = 30;
+    byte ballDirection3X = 0;
+    short ballCenter3Y = freePosY;
+    
     //Bola2 enemigo
     short ball2CenterX = 0;
     byte ball2CurrentSpeedX = 3;
@@ -181,18 +189,24 @@ public class App extends Application {
         root.getChildren().add(circleBall2);
 
         
+        //Bolatransformado
+        Circle circleBall3 = new Circle();
+        circleBall3.setRadius(7);  
+        circleBall3.setFill(Color.YELLOW);
+        root.getChildren().add(circleBall3);
+        
         
         //rectangulo ATRAS freezer colision
         Rectangle rectangle1 = new Rectangle(freeHeight,freeWidth);
         root.getChildren().add(rectangle1);
-        rectangle1.setFill(Color.YELLOW);
+        rectangle1.setFill(Color.TRANSPARENT);
         rectangle1.setX(freePosX);
         rectangle1.setY(freePosY); 
         
         //rectangulo ADELANTE freezer colision
         Rectangle rectangle2 = new Rectangle(freeHeight,freeWidth);
         root.getChildren().add(rectangle2);
-        rectangle2.setFill(Color.RED);
+        rectangle2.setFill(Color.TRANSPARENT);
         rectangle2.setX(freePosX + 90);
         rectangle2.setY(freePosY); 
         
@@ -201,14 +215,14 @@ public class App extends Application {
         //rectangulo ARRIBA freezer colision
         Rectangle rectangle3 = new Rectangle(freeHeight2,freeWidth2);
         root.getChildren().add(rectangle3);
-        rectangle3.setFill(Color.GREEN);
+        rectangle3.setFill(Color.TRANSPARENT);
         rectangle3.setX(freePosX);
         rectangle3.setY(freePosY + 100); 
         
         //rectangulo ABAJO freezer colision
         Rectangle rectangle4 = new Rectangle(freeHeight2,freeWidth2);
         root.getChildren().add(rectangle4);
-        rectangle4.setFill(Color.BLUE);
+        rectangle4.setFill(Color.TRANSPARENT);
         rectangle4.setX(freePosX);
         rectangle4.setY(freePosY); 
         
@@ -223,10 +237,10 @@ public class App extends Application {
         
         
         
-        // Terminar partida
+        // Terminar partida texto
         HBox hbox = new HBox();
         root.getChildren().add(hbox);
-        
+        hbox.setTranslateY(30);
         
         VBox vbox = new VBox();
         hbox.getChildren().add(vbox);
@@ -237,10 +251,61 @@ public class App extends Application {
         label.setFont(Font.font(TEXT_SIZE));
         vbox.getChildren().add(label);
         
+        
+        HBox hbox2 = new HBox();
+        root.getChildren().add(hbox2);
+        hbox2.setTranslateY(50);
+        
+        VBox vbox2 = new VBox();
+        hbox2.getChildren().add(vbox2);
+        vbox2.setVisible(false);
+        
+        
+        Label label2 = new Label("Transformar a la T y dispara a la D");
+        label2.setFont(Font.font(TEXT_SIZE));
+        vbox2.getChildren().add(label2);
 
 
+        HBox hbox3 = new HBox();
+        root.getChildren().add(hbox3);
+        hbox3.setTranslateY(70);
+        
+        VBox vbox3 = new VBox();
+        hbox3.getChildren().add(vbox3);
+        vbox3.setVisible(false);
+        
+        
+        Label label3 = new Label("Haz que el namekiano llegue a 10");
+        label3.setFont(Font.font(TEXT_SIZE));
+        vbox3.getChildren().add(label3);
 
-
+        HBox hbox4 = new HBox();
+        root.getChildren().add(hbox4);
+        hbox4.setTranslateY(70);
+        hbox4.setTranslateY(70);
+        
+        VBox vbox4 = new VBox();
+        hbox4.getChildren().add(vbox4);
+        vbox4.setVisible(false);
+        
+        
+        Label label4 = new Label("Has ganado");
+        label4.setFont(Font.font(TEXT_SIZE2));
+        vbox4.getChildren().add(label4);
+        
+        HBox hbox5 = new HBox();
+        root.getChildren().add(hbox5);
+        hbox5.setTranslateY(70);
+        hbox5.setTranslateY(70);
+        
+        VBox vbox5 = new VBox();
+        hbox5.getChildren().add(vbox5);
+        vbox5.setVisible(false);
+        
+        
+        Label label5 = new Label("Has perdido");
+        label5.setFont(Font.font(TEXT_SIZE2));
+        vbox5.getChildren().add(label5);
         
         // CONTROL DEL TECLADO
         scene.setOnKeyPressed((final KeyEvent keyEvent) -> {
@@ -284,11 +349,11 @@ public class App extends Application {
  
                 case D:
                     imageView2.setImage(image8);
-                    ballCenterY = (short) (freePosY + 35);
-                    ballCenterX = (short) (freePosX + 80);
-                    circleBall.setCenterY(ballCenterY);
-                    circleBall.setCenterX(ballCenterX);
-                    ballDirectionX = 1;
+                    ballCenter3Y = (short) (freePosY + 35);
+                    ballCenter3X = (short) (freePosX + 80);
+                    circleBall3.setCenterY(ballCenter3Y);
+                    circleBall3.setCenterX(ballCenter3X);
+                    ballDirection3X = 1;
                     break; 
             }
         });
@@ -316,7 +381,7 @@ public class App extends Application {
         textScore.setFill(Color.WHITE);
        
         // Texto de etiqueta para la puntuación máxima
-        Text textTitleScore2 = new Text("Glubin: ");
+        Text textTitleScore2 = new Text("Namekiano: ");
         textTitleScore2.setFont(Font.font(TEXT_SIZE));
         textTitleScore2.setFill(Color.WHITE);
        
@@ -423,6 +488,16 @@ public class App extends Application {
                 }
                 
                 
+                // ANIMACIÓN DE LA BOLA TRANSFORMADO
+                circleBall3.setCenterX(ballCenter3X);
+                ballCenter3X += ballCurrentSpeed3X * ballDirection3X;
+                if(ballCenter3X >= SCENE_WIDTH + 10) {
+                    ballDirection3X = 0;
+                    ballCenter3X = -10;
+                    ballCenter3Y = freePosY;
+                    //Hacer que pare todo
+                }
+                
                 //Movimiento glubin
                 rectangle5.setY(gluPosY);
                 imageView6.setY(gluPosY);
@@ -486,68 +561,96 @@ public class App extends Application {
                     
                     
                 // DETECCIÓN DE COLISIÓN 3 DE BOLA Y FREE
-                    Shape shapeCollision3 = Shape.intersect(circleBall2, rectangle3);
-                    boolean colisionVacia3 = shapeCollision3.getBoundsInLocal().isEmpty();
-                    if(colisionVacia3 == false && ball2DirectionY == -1) {
-                        ball2DirectionY = 1;
-                        score--;
-                        textScore.setText(String.valueOf(score));
-                    }   
+                Shape shapeCollision3 = Shape.intersect(circleBall2, rectangle3);
+                boolean colisionVacia3 = shapeCollision3.getBoundsInLocal().isEmpty();
+                if(colisionVacia3 == false && ball2DirectionY == -1) {
+                    ball2DirectionY = 1;
+                    score--;
+                    textScore.setText(String.valueOf(score));
+                }   
                     
                     
                     
                     
                 // DETECCIÓN DE COLISIÓN 4 DE BOLA Y FREE
-                    Shape shapeCollision4 = Shape.intersect(circleBall2, rectangle4);
-                    boolean colisionVacia4 = shapeCollision4.getBoundsInLocal().isEmpty();
-                    if(colisionVacia4 == false && ball2DirectionY == 1) {
-                        ball2DirectionY = -1;
-                        score--;
-                        textScore.setText(String.valueOf(score));
-                    }    
+                Shape shapeCollision4 = Shape.intersect(circleBall2, rectangle4);
+                boolean colisionVacia4 = shapeCollision4.getBoundsInLocal().isEmpty();
+                if(colisionVacia4 == false && ball2DirectionY == 1) {
+                    ball2DirectionY = -1;
+                    score--;
+                    textScore.setText(String.valueOf(score));
+                }    
                     
                     
                     
                     
                     
-                 // DETECCIÓN DE COLISIÓN 1 DE BOLA Y GLUBIN
-                    Shape shapeCollision5 = Shape.intersect(circleBall, rectangle5);
-                    boolean colisionVacia5 = shapeCollision5.getBoundsInLocal().isEmpty();
-                    if(colisionVacia5 == false && ballDirectionX == 1) {
-                        ball2DirectionY = 1;
-                        score2--;
-                        textScore2.setText(String.valueOf(score2));
-                    }       
- 
-                    
-                    //Hacer que pare glubin, y la bola CUANDO GLUBIN TENGA DE 0 VIDAS
-                    if (score2 < 1){
-                        gluDirectionY = 0;
-                        ball2DirectionX = 0;
-                        ball2DirectionY = 0;
-                        vbox.setVisible(true);
-                    }    
-                        
-                    //Hacer que pare glubin, y la bola CUANDO FREE TENGA DE 0 VIDAS
-                    if (score < 1){
-                        gluDirectionY = 0;
-                        ball2DirectionX = 0;
-                        ball2DirectionY = 0;
-                        vbox.setVisible(true);
-                    }    
-                    
-                    
-        
-                    //reiniciar partida con glubin nuevo
-                    if (score2 < 1){
-                        timelinefinal.play ();
-                    }
-                    
-                    if (score < 1){
+                // DETECCIÓN DE COLISIÓN 1 DE BOLA Y GLUBIN
+                Shape shapeCollision5 = Shape.intersect(circleBall, rectangle5);
+                boolean colisionVacia5 = shapeCollision5.getBoundsInLocal().isEmpty();
+                if(colisionVacia5 == false && ballDirectionX == 1) {
+                    ball2DirectionY = 1;
+                    score2--;
+                    textScore2.setText(String.valueOf(score2));
+                }       
+
+
+                //Hacer que pare glubin, y la bola CUANDO GLUBIN TENGA DE 0 VIDAS
+                if (score2 < 1){
+                    gluDirectionY = 0;
+                    ball2DirectionX = 0;
+                    ball2DirectionY = 0;
+                    vbox.setVisible(true);
+                    vbox2.setVisible(true);
+                    vbox3.setVisible(true);
+                }    
+
+                //Hacer que pare glubin, y la bola CUANDO FREE TENGA DE 0 VIDAS
+                if (score < 1){
+                    gluDirectionY = 0;
+                    ball2DirectionX = 0;
+                    ball2DirectionY = 0;
+                    vbox.setVisible(false);
+                    vbox2.setVisible(false);
+                    vbox3.setVisible(false);
+                    vbox4.setVisible(false);
+                    vbox5.setVisible(true);
+                }    
+
+
+
+                //reiniciar partida con glubin nuevo
+                if (score2 < 1){
+                    timelinefinal.play ();
+                }
+
+                if (score < 1){
+                timeline.stop();
+                }
+
+
+
+                // DETECCIÓN DE COLISIÓN 2 DE BOLA Y GLUBIN FREE TRANSFORMADO
+                Shape shapeCollision6 = Shape.intersect(circleBall3, rectangle5);
+                boolean colisionVacia6 = shapeCollision6.getBoundsInLocal().isEmpty();
+                if(colisionVacia6 == false && ballDirection3X == 1) {
+                    score2++;
+                    textScore2.setText(String.valueOf(score2));
+                }       
+
+
+                //reiniciar partida con glubin nuevo
+                if (score2 > 9){
                     timeline.stop();
-                    }
-                    
-                    
+                    vbox.setVisible(false);
+                    vbox2.setVisible(false);
+                    vbox3.setVisible(false);
+                    vbox4.setVisible(true);
+                }
+
+                if (score < 1){
+                    timeline.stop();
+                }
                     
         }));
         
@@ -560,7 +663,7 @@ public class App extends Application {
         //Esperar para jefe final    
        // Panel para mostrar textos (Tiempo de espera)
         HBox paneTextScore4 = new HBox();
-        paneTextScore4.setTranslateY(20);
+        paneTextScore4.setTranslateY(0);
         paneTextScore4.setMinWidth(SCENE_WIDTH);
         root.getChildren().add(paneTextScore4);
 
@@ -601,11 +704,11 @@ public class App extends Application {
         
       
         timelinefinal2 = new Timeline(
-                // 0.017 ~= 60 FPS
+            // 0.017 ~= 60 FPS
             new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
                 timeline.play();
 
-                //freezer
+         //freezer
          freePosY = (short)((SCENE_HEIGHT)/2);
          freeCurrentSpeed = 4;
          freeDirectionY = 0;
@@ -636,7 +739,7 @@ public class App extends Application {
          score = 3;
 
         // Puntuación actual2
-         score2 = 10;
+         score2 = 1;
 
         //CUADRADOS FREE
          freeHeight = 4;
@@ -655,18 +758,10 @@ public class App extends Application {
          circleBall2.setFill(Color.BLUE);
          
          
-         if (score2 < 1){
-        timelinefinal.stop();
-        }
-        
-        if (score < 1){
-        timelinefinal.stop();
-        }
-        
             }));    
         
         timelinefinal2.setCycleCount(1);
-        
+
         
         
     }
@@ -674,7 +769,10 @@ public class App extends Application {
     
     //iniciar una segunda pantalla con un public void
 
+    
+    
     public static void main(String[] args) {
+        
         launch();
     }
 
