@@ -15,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
@@ -234,7 +235,13 @@ public class App extends Application {
         rectangle5.setY(gluPosY);
 
         
-        
+        // DIBUJO DE LA RED que no debe pasar
+        for(int i=0; i<SCENE_HEIGHT; i+=30) {
+        Line line = new Line(SCENE_WIDTH/2, i, SCENE_WIDTH/2, i+10);
+        line.setStroke(Color.WHITE);
+        line.setStrokeWidth(4);
+        root.getChildren().add(line);
+        }
         
         
         // Terminar partida texto
@@ -391,7 +398,7 @@ public class App extends Application {
         textScore2.setFill(Color.WHITE);
 
         // Añadir los textos al panel reservado para ellos 
-        paneTextScore.setSpacing(10);
+        paneTextScore.setSpacing(70);
         paneTextScore.getChildren().add(textTitleScore);
         paneTextScore.getChildren().add(textScore);
         paneTextScore.getChildren().add(textTitleScore2);
@@ -667,7 +674,7 @@ public class App extends Application {
         paneTextScore4.setMinWidth(SCENE_WIDTH);
         root.getChildren().add(paneTextScore4);
 
-        // Texto de etiqueta para la puntuación
+        // Texto para ronda final
         Text textTitleScore4 = new Text("Ronda final: ");
         textTitleScore4.setFont(Font.font(TEXT_SIZE));
         textTitleScore4.setFill(Color.RED);
